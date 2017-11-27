@@ -1,0 +1,23 @@
+version: '2'
+services:
+    web:
+      image: myapp:latest
+      ports: 
+          - 8080:8080
+      depends_on:
+          - db
+    db:
+        container_name: sample_db
+        image: postgres:9.5
+        volumes:
+            - sample_db:/var/lib/postgresql/9.5/main/
+        environment:
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_DB=postgres
+            - PGDATA=/var/lib/postgresql/9.5/main/pgdata
+        ports:
+            - 5433:5432
+
+volumes:
+    sample_db: {}

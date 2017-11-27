@@ -1,0 +1,69 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: survey-db
+  labels:
+    name: survey-db
+  namespace: spring-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: survey-db
+    spec:
+      containers:
+      - name: survey-db
+        image: duc2495/mypostgres:9.5
+        ports:
+        - name: postgres
+          containerPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: survey-db
+  labels:
+    name: survey-db
+  namespace: spring-app
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    name: survey-db
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: survey-web
+  labels:
+    name: survey-web
+  namespace: spring-app
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        name: survey-web
+    spec:
+      containers:
+      - name: survey-web
+        image: duc2495/myapp:v1.1
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: survey-web
+  labels:
+    name: survey-web
+  namespace: spring-app
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    name: survey-web
+---
